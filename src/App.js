@@ -1,23 +1,21 @@
-import logo from './logo.svg';
 import './App.css';
+//import firebase into our component
+import firebase from './firebase.js';
+import SetMenu from './SetMenu';
+// import ShowMenu from './ShowMenu';
+//import the useState Hook from the React library
+// import { useState, useEffect } from 'react';
 
 function App() {
+
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+      
+      <header>
+        <h1>Salburgers</h1>
       </header>
+        < SetMenu />
     </div>
   );
 }
