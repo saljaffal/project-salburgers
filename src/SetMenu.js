@@ -2,7 +2,7 @@
 import firebase from './firebase.js';
 // import ShowMenu from './ShowMenu';
 import { useState, useEffect } from 'react';
-import burger1 from './assets'
+import burger1 from './assets/IMG_4043.jpg';
 
 const dbRefApp = firebase.database().ref('/menu/appetizers');
 const dbRefMains = firebase.database().ref('/menu/mains');
@@ -80,12 +80,12 @@ const SetMenu = () => {
         })
     }, [])
     return (
-        <div className="menuItems">
+        <div className="menuItems" key="main">
             {
             mainItems.map((item) => {
                 return (
                     
-                <div>
+                <div className="item-container" key={item.name}>
                     {/* {console.log(item)} */}
                     <h2>{item.name}</h2>
                     <p>Price: {item.price}</p>
@@ -97,7 +97,7 @@ const SetMenu = () => {
             }
             { appItems.map((item) => {
                 return(
-                <div>
+                <div className="item-container" key={item.name}>
                     {/* {console.log(item)} */}
                     <h2>{item.name}</h2>
                     <p>Price: {item.price}</p>
@@ -109,7 +109,7 @@ const SetMenu = () => {
             }
             { sideItems.map((item) => {
                 return(
-                <div>
+                <div className="item-container" key={item.name}>
                     {/* {console.log(item)} */}
                     <h2>{item.name}</h2>
                     <p>Price: {item.price}</p>
@@ -121,7 +121,7 @@ const SetMenu = () => {
             }
             { drinkItems.map((item) => {
                 return(
-                <div>
+                <div className="item-container" key={item.name}>
                     {/* {console.log(item)} */}
                     <h2>{item.name}</h2>
                     <p>Price: {item.price}</p>
