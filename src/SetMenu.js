@@ -2,38 +2,37 @@
 import firebase from './firebase.js';
 // import ShowMenu from './ShowMenu';
 import { useState, useEffect } from 'react';
-import burger1 from './assets/IMG_4043.jpg';
+// import burger1 from './assets/IMG_4043.jpg';
 
 const dbRefApp = firebase.database().ref('/menu/appetizers');
 const dbRefMains = firebase.database().ref('/menu/mains');
 const dbRefSides = firebase.database().ref('/menu/sides');
 const dbRefDrinks = firebase.database().ref('/menu/drinks');
+const dbRefCart = firebase.database().ref('cart');
 // console.log(dbRefMenu);
 
 
-const SetMenu = () => {
+const SetMenu = (props) => {
 
     const [mainItems, setMainItems] = useState([]);
-    const [appItems, setAppItems] = useState([]);
-    const [drinkItems, setDrinkItems] = useState([]);
-    const [sideItems, setSideItems] = useState([]);
+    // const [cartItem, setCartItem] = useState([]);
+    const {addToCart} = props;
+    
 
     useEffect(() => {
 
-        const mainArray = [];
-        const appArray = [];
-        const sideArray = [];
-        const drinkArray = [];
+        const totalArray = [];
 
         dbRefMains.on('value', (data) => {
 
             const listOfMenu = data.val(); //database object with all our nested To Dos
             for (let nestedMenuObject in listOfMenu) {
 
-                mainArray.push(listOfMenu[nestedMenuObject])
+                totalArray.push(listOfMenu[nestedMenuObject])
                 }
-
-                setMainItems(mainArray);
+                // console.log(totalArray);
+                
+                // setMainItems(totalArray);
 
         })
 
@@ -43,10 +42,10 @@ const SetMenu = () => {
             
             for (let nestedMenuObject in listOfMenu) {
 
-                appArray.push(listOfMenu[nestedMenuObject])
+                totalArray.push(listOfMenu[nestedMenuObject])
                 }
 
-                setAppItems(appArray);
+                // setAppItems(appArray);
 
         })
 
@@ -56,14 +55,11 @@ const SetMenu = () => {
 
             for (let nestedMenuObject in listOfMenu) {
 
-                sideArray.push(listOfMenu[nestedMenuObject])
+                totalArray.push(listOfMenu[nestedMenuObject])
                 }
 
-                setSideItems(sideArray);
+                // setSideItems(sideArray);
             
-            
-            
-            //create an array to represent To Do object
 
         })
 
@@ -72,98 +68,59 @@ const SetMenu = () => {
             const listOfMenu = data.val(); //database object with all our nested To Dos
             for (let nestedMenuObject in listOfMenu) {
 
-                drinkArray.push(listOfMenu[nestedMenuObject])
+                totalArray.push(listOfMenu[nestedMenuObject])
                 }
 
-                setDrinkItems(drinkArray);
+                // setDrinkItems(drinkArray);
 
         })
+
+        setMainItems(totalArray);
+        // console.log(totalArray);
+
+        
     }, [])
+
+    const handleClick = (item) => {
+            
+        addToCart(item);
+    }
+
+    
+
+
     return (
-        <div className="menuItems" key="main">
-            {
-            mainItems.map((item) => {
-                return (
-                    
-                <div className="item-container" key={item.name}>
-                    {/* {console.log(item)} */}
-                    <h2>{item.name}</h2>
-                    <p>Price: {item.price}</p>
-                    <p>Description: {item.description}</p>
-                    <img src={item.image} alt={`This is ${item.name}`}/>
-                </div>
-                )
-                })
-            }
-            { appItems.map((item) => {
-                return(
-                <div className="item-container" key={item.name}>
-                    {/* {console.log(item)} */}
-                    <h2>{item.name}</h2>
-                    <p>Price: {item.price}</p>
-                    <p>Description: {item.description}</p>
-                    <img src={item.image} alt={`This is ${item.name}`}></img>
-                </div>
-                )
-            })
-            }
-            { sideItems.map((item) => {
-                return(
-                <div className="item-container" key={item.name}>
-                    {/* {console.log(item)} */}
-                    <h2>{item.name}</h2>
-                    <p>Price: {item.price}</p>
-                    <p>Description: {item.description}</p>
-                    <img src={item.image} alt={`This is ${item.name}`}></img>
-                </div>
-                )
-            })
-            }
-            { drinkItems.map((item) => {
-                return(
-                <div className="item-container" key={item.name}>
-                    {/* {console.log(item)} */}
-                    <h2>{item.name}</h2>
-                    <p>Price: {item.price}</p>
-                    <p>Description: {item.description}</p>
-                    <img src={item.image} alt={`This is ${item.name}`}></img>
-                </div>
-                )
-            })
-            }
-        </div>
+        <section>
+        {
+            mainItems.length === 0 ?
+            <h2>No Items found! Check back later</h2>
+            :
+            <div 
+            className="menuItems" 
+            key="main" 
+            > 
+            { 
+                mainItems.map((item) => {
+                    return (
+                    <div 
+                    className="item-container" 
+                    key={item.name}
+                    onClick={(e) => handleClick(item)}
+                    >
+                        <h2>{item.name}</h2>
+                        <p>Price: {item.price}</p>
+                        <p>Description: {item.description}</p>
+                        <img src={item.image} alt={`${item.description}`}/>
+                    </div>
+                    )
+                    })
+                }
+            </div>
+        }
+        </section>
 )
 }
 
 
 
 export default SetMenu;
-    // for (let nestedMenuObject in listOfMenu) {
-    
-    //     toDoArray.push(listOfMenu[nestedMenuObject]);
-    // }
-    
-    // for (let i=0; i< toDoArray.length; i++) {
-    //     for (let nestedMenuObject in toDoArray[i]) {
-    
-    //         appArray.push(toDoArray[i][nestedMenuObject]);
-    //     }
-    // }
-    
-    // console.log(toDoArray[0]);
-    
-    // console.log(toDoArray[0]);
-    // for (let i=0; i<appArray.length ;i++)
-    // {
-    //     const { 
-    //         description, 
-    //         image, 
-    //         name, 
-    //         price
-    //     } = appArray[i];
-    
-    //     // console.log(description);
-    //     // console.log(image);
-    //     // console.log(name);
-    //     // console.log(price);
-    // }
