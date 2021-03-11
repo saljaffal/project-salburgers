@@ -2,61 +2,70 @@ import firebase from './firebase.js';
 import { useState, useEffect } from 'react';
 
 const dbRefCart = firebase.database().ref('cart');
-// dbRefCart.set([]);
 
 
 const SetCart = (props) => {
 
     const {selectedItem} = props;
+    
     // console.log(selectedItem);
     
     const [cartItems, setCartItems] = useState([]);
-    const [updatedCartItems, setUpdatedCartItems] = useState([]);
+    const [dataLoad, setDataLoad] = useState([]);
     
     useEffect(() => {
 
         const totalCartArray = [];
-        const uniqueID = [];
 
         dbRefCart.on('value', (data) => {
 
             const cartList = data.val(); //database object with all our nested To Dos
-            // console.log(cartList);
             
             for (let nestedCartObject in cartList) {
 
-                // let cartItem = {...cartList[nestedCartObject], quantity: 1}
+                const item = cartList[nestedCartObject];
+                const key = nestedCartObject;
 
-                totalCartArray.push(cartList[nestedCartObject])
-
+                //checks if it is the empty data that I set as to keep the cart ref if the cart is empty, as if this is deleted then the whole cart ref is deleted
+                if (item.name === 'empty')
+                {}
+                //if it is not the empty cart ref then push to total cart array
+                else {
+                    totalCartArray.push({...cartList[nestedCartObject], key: key});
                 }
-                // console.log(totalCartArray);
-                // filterSelection(selectedItem);
+            }
         })
 
         setCartItems(totalCartArray);
-        setUpdatedCartItems(selectedItem);
     }, [])
+    
 
 
-    const handleClick = (event) => {
-
-        // copySelectedItem(item);
+    const handleClick = (item) => {
         
-        event.currentTarget.remove();
-        console.log(event);
-        
-        // copySelectedItem(item);
+        //compares the selected key to the key in the database and deletes it from there
+       
+        let dbRefCartUpdate = firebase.database().ref(`cart/${item.key}`);
 
+        dbRefCartUpdate.remove();
+
+        //this is used to refresh the data and render again
+        setDataLoad([]);
         }
-    
-    
 
+    function refresh() {
+        //used to refresh the items as when they first load no html is shown and I am assuming this is because the html is run before the data storing
+        setDataLoad([]);
+    }
+    
     return(
         <section>
             {
             cartItems.length === 0 ?
-            <h2>No Items found! Check back later</h2>
+            <>
+            <h2>No Items found! Please add Items to the cart</h2>
+            <button onClick={refresh}>Click here to reload Items</button>
+            </>
             :
             <div 
             className="cartItems" 
@@ -67,13 +76,12 @@ const SetCart = (props) => {
                     return (
                     <div 
                     className="cart-container" 
-                    // key=`"cart-" + {item.name}`
-                  onClick={handleClick}
+                    key={item.key}
+                    onClick={(e) => handleClick(item)}
                     >
+                        <img src={item.image} alt={`${item.description}`}/>
                         <h2>{item.name}</h2>
                         <p>Price: {item.price}</p>
-                        <p>Description: {item.description}</p>
-                        <img src={item.image} alt={`${item.description}`}/>
                     </div>
                     )
                     })
