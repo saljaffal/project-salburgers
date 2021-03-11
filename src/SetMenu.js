@@ -14,9 +14,16 @@ const dbRefCart = firebase.database().ref('cart');
 
 const SetMenu = (props) => {
 
+    // console.log(props);
+    const {copySelectedItem} = props;
+    
     const [mainItems, setMainItems] = useState([]);
+    const [dataLoad, setDataLoad] = useState([]);
     // const [cartItem, setCartItem] = useState([]);
-    const {addToCart} = props;
+    // console.log( props.addToCart);
+    
+    // const {filterCart} = props;
+    // const {incrementCart} = props2;
     
 
     useEffect(() => {
@@ -77,23 +84,35 @@ const SetMenu = (props) => {
 
         setMainItems(totalArray);
         // console.log(totalArray);
-
+        
         
     }, [])
 
     const handleClick = (item) => {
-            
-        addToCart(item);
-    }
 
-    
+        // copySelectedItem(item);
+        
+        dbRefCart.push({...item, quantity: 1});
 
+        copySelectedItem(item);
 
-    return (
-        <section>
-        {
+        }
+        
+        function refresh() {
+            setDataLoad([]);
+        }
+        
+        
+        
+        
+        return (
+            <section>
+        { /* {   setTimeout() */
             mainItems.length === 0 ?
-            <h2>No Items found! Check back later</h2>
+            <>
+            <h2>No Items found!</h2>
+            <button onClick={refresh}>Click here to reload Items</button>
+            </>
             :
             <div 
             className="menuItems" 
@@ -102,24 +121,26 @@ const SetMenu = (props) => {
             { 
                 mainItems.map((item) => {
                     return (
-                    <div 
-                    className="item-container" 
-                    key={item.name}
-                    onClick={(e) => handleClick(item)}
-                    >
+                        <div 
+                        className="item-container" 
+                        key={item.name}
+                        onClick={() => handleClick(item)}
+                        >
+                        <img src={item.image} alt={`${item.description}`}/>
                         <h2>{item.name}</h2>
                         <p>Price: {item.price}</p>
                         <p>Description: {item.description}</p>
-                        <img src={item.image} alt={`${item.description}`}/>
+                        
                     </div>
                     )
-                    })
+                })
                 }
             </div>
         }
         </section>
 )
 }
+
 
 
 

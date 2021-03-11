@@ -2,7 +2,8 @@
   text-align: center;
 }
 
-.menuItems {
+.menuItems, 
+.cartItems {
   display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 25px;
@@ -14,12 +15,3 @@ img {
   width: 100%;
 }
 
-.menuItems div {
-  /* display: flex; */
-  /* flex-direction: column; */
-  /* display: inline-block; */
-}
-
-.menuItems div > * {
-  /* display: inline-block; */
-}

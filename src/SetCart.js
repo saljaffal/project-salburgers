@@ -2,32 +2,55 @@ import firebase from './firebase.js';
 import { useState, useEffect } from 'react';
 
 const dbRefCart = firebase.database().ref('cart');
+// dbRefCart.set([]);
 
 
-const SetCart = () => {
+const SetCart = (props) => {
 
+    const {selectedItem} = props;
+    // console.log(selectedItem);
+    
     const [cartItems, setCartItems] = useState([]);
+    const [updatedCartItems, setUpdatedCartItems] = useState([]);
     
     useEffect(() => {
 
         const totalCartArray = [];
+        const uniqueID = [];
 
         dbRefCart.on('value', (data) => {
 
             const cartList = data.val(); //database object with all our nested To Dos
-            console.log(cartList);
+            // console.log(cartList);
             
             for (let nestedCartObject in cartList) {
 
+                // let cartItem = {...cartList[nestedCartObject], quantity: 1}
+
                 totalCartArray.push(cartList[nestedCartObject])
+
                 }
                 // console.log(totalCartArray);
-                
-                setCartItems(totalCartArray);
+                // filterSelection(selectedItem);
         })
 
+        setCartItems(totalCartArray);
+        setUpdatedCartItems(selectedItem);
+    }, [])
 
-    })
+
+    const handleClick = (event) => {
+
+        // copySelectedItem(item);
+        
+        event.currentTarget.remove();
+        console.log(event);
+        
+        // copySelectedItem(item);
+
+        }
+    
+    
 
     return(
         <section>
@@ -45,7 +68,7 @@ const SetCart = () => {
                     <div 
                     className="cart-container" 
                     // key=`"cart-" + {item.name}`
-                //   onClick={(e) => handleClick(item)}
+                  onClick={handleClick}
                     >
                         <h2>{item.name}</h2>
                         <p>Price: {item.price}</p>
@@ -61,4 +84,4 @@ const SetCart = () => {
     )
 }
 
-// export default SetCart;
+export default SetCart;

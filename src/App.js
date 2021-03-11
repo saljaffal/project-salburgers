@@ -7,21 +7,19 @@ import SetCart from './SetCart.js'
 //import the useState Hook from the React library
 import { useState, useEffect } from 'react';
 
-const dbRefCart = firebase.database().ref('cart');
+
+
+// const dbRefCart = firebase.database().ref('cart');
 
 
 function App() {
 
+  const [selectedItem, setSelectedItem] = useState([]);
+
   
+  const copySelectedItem = (item) => {
 
-  const addToCart = (item) => {
-
-    const selection = item;        
-
-    selection.quantity = 1;
-    let newItem = dbRefCart.push(selection);
-    let newID = newItem.key;
-
+    setSelectedItem(item);
     
   }
 
@@ -31,8 +29,8 @@ function App() {
       <header>
         <h1>Salburgers</h1>
       </header>
-        < SetMenu addToCart={addToCart}/>
-        < SetCart />
+        < SetMenu copySelectedItem={copySelectedItem}/>
+        < SetCart selectedItem={selectedItem}/>
     </div>
   );
 }
